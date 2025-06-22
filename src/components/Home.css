@@ -100,9 +100,14 @@
   font-size: 1.1rem;
   transition: color 0.3s ease;
   z-index: 2;
+  pointer-events: none;
 }
 
 .search-input-group:focus-within i {
+  color: #007cf0;
+}
+
+.search-input-group:hover i {
   color: #007cf0;
 }
 

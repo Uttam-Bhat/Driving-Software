@@ -104,26 +104,42 @@ function UserDetailsModal({ isOpen, onClose, userData }) {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       console.log('Form updated:', formData);
+      
+      // Update the documents list with the new data
+      const updatedDocuments = documents.map(doc => 
+        doc.documentType === editingDocument.documentType && 
+        doc.documentSubType === editingDocument.documentSubType 
+          ? { ...formData }
+          : doc
+      );
+      
+      setDocuments(updatedDocuments);
       setIsEditing(false);
       setEditingDocument(null);
-      // Update the documents list with the new data
-      setDocuments(prev => prev.map(doc => 
-        doc.documentType === formData.documentType ? formData : doc
-      ));
+      
+      // Show success message
+      alert('Document updated successfully!');
     } catch (error) {
       console.error('Error updating form:', error);
+      alert('Error updating document. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleUpdateDocument = (doc) => {
-    setFormData(doc);
-    setEditingDocument(doc);
+    // Create a copy of the document data to avoid reference issues
+    const documentCopy = { ...doc };
+    setFormData(documentCopy);
+    setEditingDocument(documentCopy);
     setIsEditing(true);
   };
 
   const handleCancelEdit = () => {
+    // Reset form data to the original document data
+    if (editingDocument) {
+      setFormData(editingDocument);
+    }
     setIsEditing(false);
     setEditingDocument(null);
   };
