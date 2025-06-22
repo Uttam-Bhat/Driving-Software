@@ -48,12 +48,12 @@ function Home() {
           <h2>Search by Mobile Number</h2>
           <form onSubmit={handleSearch} className="search-form">
             <div className="search-input-group">
-              <i className="fas fa-phone"></i>
+              <i className="fas fa-search"></i>
               <input
                 type="tel"
                 value={mobileNumber}
                 onChange={(e) => setMobileNumber(e.target.value)}
-                placeholder="Mobile number"
+                placeholder="Enter mobile number"
                 pattern="[0-9]{10}"
                 maxLength="10"
                 required

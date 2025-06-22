@@ -24,6 +24,7 @@ function UserDetailsModal({ isOpen, onClose, userData }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingDocument, setEditingDocument] = useState(null);
+  const [viewingDocument, setViewingDocument] = useState(null);
 
   useEffect(() => {
     if (userData) {
@@ -144,6 +145,40 @@ function UserDetailsModal({ isOpen, onClose, userData }) {
     setEditingDocument(null);
   };
 
+  const handleViewDocument = (doc) => {
+    setViewingDocument(doc);
+  };
+
+  const closeViewModal = () => {
+    setViewingDocument(null);
+  };
+
+  const getDocumentIcon = (type) => {
+    switch (type) {
+      case 'License':
+        return 'fa-id-card';
+      case 'Insurance':
+        return 'fa-shield-alt';
+      case 'RC':
+        return 'fa-car';
+      default:
+        return 'fa-file-alt';
+    }
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Completed':
+        return 'completed';
+      case 'Pending':
+        return 'pending';
+      case 'Applied':
+        return 'applied';
+      default:
+        return 'default';
+    }
+  };
+
   const getTotalDocuments = () => documents.length;
   const getCompletedDocuments = () => documents.filter(doc => doc.applicationStatus === 'Completed').length;
   const getTotalAmount = () => documents.reduce((sum, doc) => sum + parseFloat(doc.totalAmount || 0), 0);
@@ -216,6 +251,7 @@ function UserDetailsModal({ isOpen, onClose, userData }) {
             <CustomerDocuments 
               documents={documents}
               onUpdateDocument={handleUpdateDocument}
+              onViewDocument={handleViewDocument}
             />
           ) : (
             <div className="edit-document-form">
@@ -325,6 +361,88 @@ function UserDetailsModal({ isOpen, onClose, userData }) {
           )}
         </div>
       </div>
+      
+      {/* View Document Modal */}
+      {viewingDocument && (
+        <div className="modal-overlay" onClick={closeViewModal}>
+          <div className="view-modal-content" onClick={e => e.stopPropagation()}>
+            <button className="close-button" onClick={closeViewModal} aria-label="Close">
+              <i className="fas fa-times"></i>
+            </button>
+            
+            <div className="view-modal-header">
+              <h3>Document Details</h3>
+              <div className="document-type-badge">
+                <i className={`fas ${getDocumentIcon(viewingDocument.documentType)}`}></i>
+                {viewingDocument.documentType} - {viewingDocument.documentSubType}
+              </div>
+            </div>
+            
+            <div className="view-modal-body">
+              <div className="detail-section">
+                <h4>Document Information</h4>
+                <div className="detail-grid">
+                  <div className="detail-item">
+                    <label>Document Type</label>
+                    <span>{viewingDocument.documentType}</span>
+                  </div>
+                  <div className="detail-item">
+                    <label>Document Sub Type</label>
+                    <span>{viewingDocument.documentSubType}</span>
+                  </div>
+                  <div className="detail-item">
+                    <label>Application Status</label>
+                    <span className={`status ${getStatusColor(viewingDocument.applicationStatus)}`}>
+                      {viewingDocument.applicationStatus}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="detail-section">
+                <h4>Payment Information</h4>
+                <div className="detail-grid">
+                  <div className="detail-item">
+                    <label>Total Amount</label>
+                    <span className="amount">₹{parseFloat(viewingDocument.totalAmount).toLocaleString()}</span>
+                  </div>
+                  <div className="detail-item">
+                    <label>Advance Payment</label>
+                    <span className="amount paid">₹{parseFloat(viewingDocument.advancePayment).toLocaleString()}</span>
+                  </div>
+                  <div className="detail-item">
+                    <label>Balance</label>
+                    <span className={`amount ${parseFloat(viewingDocument.balance) <= 0 ? 'paid' : 'pending'}`}>
+                      ₹{parseFloat(viewingDocument.balance).toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="detail-section">
+                <h4>Application Details</h4>
+                <div className="detail-grid">
+                  <div className="detail-item">
+                    <label>Application Date</label>
+                    <span>{viewingDocument.applicationDate}</span>
+                  </div>
+                  <div className="detail-item">
+                    <label>Payment Date</label>
+                    <span>{viewingDocument.amountPaidDate}</span>
+                  </div>
+                </div>
+              </div>
+              
+              {viewingDocument.notes && (
+                <div className="detail-section">
+                  <h4>Notes</h4>
+                  <p className="notes">{viewingDocument.notes}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

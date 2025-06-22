@@ -1,7 +1,7 @@
 import React from 'react';
 import './CustomerDocuments.css';
 
-function CustomerDocuments({ documents, onUpdateDocument }) {
+function CustomerDocuments({ documents, onUpdateDocument, onViewDocument }) {
   const getDocumentIcon = (type) => {
     switch (type) {
       case 'License':
@@ -54,6 +54,26 @@ function CustomerDocuments({ documents, onUpdateDocument }) {
       month: 'short',
       day: 'numeric'
     });
+  };
+
+  const handleViewDocument = (doc) => {
+    if (onViewDocument) {
+      onViewDocument(doc);
+    } else {
+      // Default behavior - show document details in a simple alert
+      const details = `
+Document Details:
+Type: ${doc.documentType} - ${doc.documentSubType}
+Status: ${doc.applicationStatus}
+Total Amount: ${formatCurrency(doc.totalAmount)}
+Advance Payment: ${formatCurrency(doc.advancePayment)}
+Balance: ${formatCurrency(doc.balance)}
+Application Date: ${formatDate(doc.applicationDate)}
+Payment Date: ${formatDate(doc.amountPaidDate)}
+Notes: ${doc.notes || 'No notes available'}
+      `;
+      alert(details);
+    }
   };
 
   return (
@@ -146,7 +166,7 @@ function CustomerDocuments({ documents, onUpdateDocument }) {
                 <i className="fas fa-edit"></i>
                 Update Details
               </button>
-              <button className="action-button secondary">
+              <button className="action-button secondary" onClick={() => handleViewDocument(doc)}>
                 <i className="fas fa-eye"></i>
                 View Details
               </button>
