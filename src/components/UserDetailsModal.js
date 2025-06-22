@@ -23,7 +23,7 @@ function UserDetailsModal({ isOpen, onClose, userData }) {
   const [documentSubTypes, setDocumentSubTypes] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [activeTab, setActiveTab] = useState('overview');
+  const [editingDocument, setEditingDocument] = useState(null);
 
   useEffect(() => {
     if (userData) {
@@ -105,6 +105,7 @@ function UserDetailsModal({ isOpen, onClose, userData }) {
       await new Promise(resolve => setTimeout(resolve, 1000));
       console.log('Form updated:', formData);
       setIsEditing(false);
+      setEditingDocument(null);
       // Update the documents list with the new data
       setDocuments(prev => prev.map(doc => 
         doc.documentType === formData.documentType ? formData : doc
@@ -118,8 +119,13 @@ function UserDetailsModal({ isOpen, onClose, userData }) {
 
   const handleUpdateDocument = (doc) => {
     setFormData(doc);
+    setEditingDocument(doc);
     setIsEditing(true);
-    setActiveTab('edit');
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditingDocument(null);
   };
 
   const getTotalDocuments = () => documents.length;
@@ -137,28 +143,13 @@ function UserDetailsModal({ isOpen, onClose, userData }) {
           <i className="fas fa-times"></i>
         </button>
         
-        {/* Customer Header Section */}
+        {/* Simplified Header */}
         <div className="customer-header">
-          <div className="customer-avatar">
-            <i className="fas fa-user"></i>
-          </div>
-          <div className="customer-info">
+          <div className="header-content">
             <h2>{formData.customerName}</h2>
-            <div className="customer-meta">
-              <span className="contact-info">
-                <i className="fas fa-phone"></i>
-                {formData.contactNumber}
-              </span>
-              <span className="customer-id">
-                <i className="fas fa-id-card"></i>
-                ID: {formData.contactNumber}
-              </span>
-            </div>
-          </div>
-          <div className="customer-status">
-            <div className={`status-indicator ${getTotalBalance() <= 0 ? 'paid' : 'pending'}`}>
-              <i className={`fas ${getTotalBalance() <= 0 ? 'fa-check-circle' : 'fa-clock'}`}></i>
-              {getTotalBalance() <= 0 ? 'Fully Paid' : 'Payment Pending'}
+            <div className="contact-info">
+              <i className="fas fa-phone"></i>
+              <span>{formData.contactNumber}</span>
             </div>
           </div>
         </div>
@@ -203,125 +194,40 @@ function UserDetailsModal({ isOpen, onClose, userData }) {
           </div>
         </div>
 
-        {/* Tab Navigation */}
-        <div className="tab-navigation">
-          <button 
-            className={`tab-button ${activeTab === 'overview' ? 'active' : ''}`}
-            onClick={() => setActiveTab('overview')}
-          >
-            <i className="fas fa-th-large"></i>
-            Overview
-          </button>
-          <button 
-            className={`tab-button ${activeTab === 'documents' ? 'active' : ''}`}
-            onClick={() => setActiveTab('documents')}
-          >
-            <i className="fas fa-file-alt"></i>
-            Documents ({getTotalDocuments()})
-          </button>
-          <button 
-            className={`tab-button ${activeTab === 'edit' ? 'active' : ''}`}
-            onClick={() => setActiveTab('edit')}
-            disabled={!isEditing}
-          >
-            <i className="fas fa-edit"></i>
-            Edit
-          </button>
-        </div>
-
-        {/* Tab Content */}
-        <div className="tab-content">
-          {activeTab === 'overview' && (
-            <div className="overview-tab">
-              <div className="overview-section">
-                <h3>Customer Information</h3>
-                <div className="info-grid">
-                  <div className="info-item">
-                    <label>Full Name</label>
-                    <span>{formData.customerName}</span>
-                  </div>
-                  <div className="info-item">
-                    <label>Contact Number</label>
-                    <span>{formData.contactNumber}</span>
-                  </div>
-                  <div className="info-item full-width">
-                    <label>Address</label>
-                    <span>{formData.address}</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="overview-section">
-                <h3>Payment Summary</h3>
-                <div className="payment-summary">
-                  <div className="payment-item">
-                    <span>Total Amount</span>
-                    <span className="amount">₹{getTotalAmount().toLocaleString()}</span>
-                  </div>
-                  <div className="payment-item">
-                    <span>Amount Paid</span>
-                    <span className="amount paid">₹{getTotalPaid().toLocaleString()}</span>
-                  </div>
-                  <div className="payment-item total">
-                    <span>Balance Due</span>
-                    <span className={`amount ${getTotalBalance() <= 0 ? 'paid' : 'pending'}`}>
-                      ₹{getTotalBalance().toLocaleString()}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'documents' && !isEditing && (
+        {/* Documents Section */}
+        <div className="documents-section">
+          {!isEditing ? (
             <CustomerDocuments 
               documents={documents}
               onUpdateDocument={handleUpdateDocument}
             />
-          )}
-
-          {activeTab === 'edit' && isEditing && (
-            <form onSubmit={handleSubmit} className="edit-form">
-              <h3>Update Document Details</h3>
-              
-              <div className="form-section">
-                <h4>Document Information</h4>
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Document Type <span className="required">*</span></label>
-                    <select
-                      name="documentType"
-                      value={formData.documentType}
-                      onChange={handleChange}
-                      required
-                    >
-                      <option value="">Select Document Type</option>
-                      <option value="License">License</option>
-                      <option value="Insurance">Insurance</option>
-                      <option value="RC">RC</option>
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label>Document Sub Type <span className="required">*</span></label>
-                    <select
-                      name="documentSubType"
-                      value={formData.documentSubType}
-                      onChange={handleChange}
-                      required
-                      disabled={!formData.documentType}
-                    >
-                      <option value="">Select Sub Type</option>
-                      {documentSubTypes.map(type => (
-                        <option key={type} value={type}>{type}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
+          ) : (
+            <div className="edit-document-form">
+              <div className="edit-header">
+                <h3>Update Document Details</h3>
+                <p>Editing: {editingDocument?.documentType} - {editingDocument?.documentSubType}</p>
               </div>
-
-              <div className="form-section">
-                <h4>Payment Information</h4>
-                <div className="form-row">
+              
+              <form onSubmit={handleSubmit}>
+                <div className="form-grid">
+                  <div className="form-group">
+                    <label>Document Type</label>
+                    <input
+                      type="text"
+                      value={formData.documentType}
+                      readOnly
+                      className="readonly"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Document Sub Type</label>
+                    <input
+                      type="text"
+                      value={formData.documentSubType}
+                      readOnly
+                      className="readonly"
+                    />
+                  </div>
                   <div className="form-group">
                     <label>Total Amount <span className="required">*</span></label>
                     <input
@@ -335,27 +241,23 @@ function UserDetailsModal({ isOpen, onClose, userData }) {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Advance Payment <span className="required">*</span></label>
+                    <label>Advance Payment</label>
                     <input
-                      type="number"
-                      name="advancePayment"
+                      type="text"
                       value={formData.advancePayment}
-                      onChange={handleChange}
-                      min="0"
-                      step="0.01"
-                      required
+                      readOnly
+                      className="readonly"
                     />
                   </div>
-                </div>
-                <div className="form-row">
                   <div className="form-group">
                     <label>Balance</label>
                     <input
                       type="number"
                       name="balance"
                       value={formData.balance}
-                      readOnly
-                      className="readonly"
+                      onChange={handleChange}
+                      min="0"
+                      step="0.01"
                     />
                   </div>
                   <div className="form-group">
@@ -373,43 +275,37 @@ function UserDetailsModal({ isOpen, onClose, userData }) {
                     </select>
                   </div>
                 </div>
-              </div>
-
-              <div className="form-section">
-                <h4>Additional Information</h4>
+                
                 <div className="form-group full-width">
                   <label>Notes</label>
                   <textarea
                     name="notes"
                     value={formData.notes}
                     onChange={handleChange}
-                    rows="3"
+                    rows="4"
                     placeholder="Enter any additional notes..."
                   />
                 </div>
-              </div>
 
-              <div className="form-actions">
-                <button 
-                  type="button" 
-                  className="cancel-button"
-                  onClick={() => {
-                    setIsEditing(false);
-                    setActiveTab('overview');
-                  }}
-                >
-                  Cancel
-                </button>
-                <button 
-                  type="submit" 
-                  className="submit-button"
-                  disabled={isSubmitting}
-                >
-                  <i className={`fas ${isSubmitting ? 'fa-spinner fa-spin' : 'fa-save'}`}></i>
-                  {isSubmitting ? 'Updating...' : 'Update Document'}
-                </button>
-              </div>
-            </form>
+                <div className="form-actions">
+                  <button 
+                    type="button" 
+                    className="cancel-button"
+                    onClick={handleCancelEdit}
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    type="submit" 
+                    className="submit-button"
+                    disabled={isSubmitting}
+                  >
+                    <i className={`fas ${isSubmitting ? 'fa-spinner fa-spin' : 'fa-save'}`}></i>
+                    {isSubmitting ? 'Updating...' : 'Update Document'}
+                  </button>
+                </div>
+              </form>
+            </div>
           )}
         </div>
       </div>
