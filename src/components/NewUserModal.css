@@ -1,0 +1,146 @@
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2rem 2.5rem 2rem 2.5rem;
+  min-width: 370px;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.close-button {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.2rem;
+  background: transparent;
+  border: none;
+  font-size: 1.7rem;
+  cursor: pointer;
+}
+
+.new-user-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  margin-top: 1.2rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1 1 0;
+}
+
+.input-icon-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon-group input {
+  padding-left: 2.2rem;
+}
+
+.input-icon {
+  position: absolute;
+  left: 0.7rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #a0aec0;
+  font-size: 1.1rem;
+  pointer-events: none;
+}
+
+.form-group.full-width {
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+
+.form-actions button {
+  padding: 0.65rem 1.5rem;
+  border-radius: 7px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.form-actions .cancel-button {
+  background: #e2e8f0;
+  color: #2d3748;
+}
+
+.form-actions .cancel-button:hover {
+  background: #cbd5e1;
+}
+
+.form-actions .submit-button {
+  background: linear-gradient(135deg, #007cf0 0%, #00dfd8 100%);
+  color: #fff;
+}
+
+.form-actions .submit-button:hover {
+  background: linear-gradient(135deg, #00dfd8 0%, #007cf0 100%);
+}
+
+input, select, textarea {
+  padding: 0.6rem 0.9rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input.readonly {
+  background: #f5f7fa;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 48px;
+}
+
+.required {
+  color: #e53e3e;
+  margin-left: 0.2rem;
+}
+
+@media (max-width: 700px) {
+  .modal-content {
+    min-width: 90vw;
+    max-width: 98vw;
+    padding: 1rem 0.5rem 1rem 0.5rem;
+  }
+  .form-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+} 
