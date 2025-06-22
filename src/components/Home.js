@@ -53,7 +53,7 @@ function Home() {
                 type="tel"
                 value={mobileNumber}
                 onChange={(e) => setMobileNumber(e.target.value)}
-                placeholder="Enter mobile number"
+                placeholder="Mobile number"
                 pattern="[0-9]{10}"
                 maxLength="10"
                 required
