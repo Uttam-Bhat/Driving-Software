@@ -43,14 +43,14 @@
   position: absolute;
   top: 1.5rem;
   right: 1.5rem;
-  background: #f8f9fa;
+  background: linear-gradient(135deg, #ff5858 0%, #f09819 100%);
   border: none;
   border-radius: 50%;
   width: 40px;
   height: 40px;
   font-size: 1.2rem;
   cursor: pointer;
-  color: #6c757d;
+  color: #fff;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
@@ -60,8 +60,8 @@
 }
 
 .close-button:hover {
-  background: #e9ecef;
-  color: #495057;
+  background: linear-gradient(135deg, #f09819 0%, #ff5858 100%);
+  color: #fff;
   transform: scale(1.1);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }

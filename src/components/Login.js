@@ -29,45 +29,51 @@ function Login() {
 
   return (
     <div className="login-container">
-      <div className="login-box">
-        <h1>Welcome Back</h1>
-        <p className="login-subtitle">Please enter your credentials to continue</p>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
+      <div className="login-card-pro">
+        <h1 className="login-title-pro">Sign In</h1>
+        <p className="login-subtitle-pro">Welcome back! Please login to your account.</p>
+        <form onSubmit={handleSubmit} className="login-form-pro">
+          <div className="form-group-pro">
             <input
               type="email"
               id="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="Enter your email"
               required
+              className={formData.email ? 'filled' : ''}
+              autoComplete="username"
             />
             <label htmlFor="email">Email</label>
-            <i className="fas fa-envelope input-icon"></i>
+            <i className="fas fa-envelope input-icon-pro"></i>
           </div>
-          <div className="form-group">
+          <div className="form-group-pro">
             <input
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               id="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="Enter your password"
               required
+              className={formData.password ? 'filled' : ''}
+              autoComplete="current-password"
             />
             <label htmlFor="password">Password</label>
-            <i className="fas fa-lock input-icon"></i>
-            <i 
-              className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'} password-toggle`}
+            <i className="fas fa-lock input-icon-pro"></i>
+            <i
+              className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'} password-toggle-pro`}
               onClick={togglePasswordVisibility}
+              tabIndex={0}
+              role="button"
+              aria-label="Toggle password visibility"
             ></i>
           </div>
-          <button type="submit" className="login-button">
+          <button type="submit" className="login-button-pro">
             <i className="fas fa-sign-in-alt"></i> Sign In
           </button>
         </form>
-        <div className="forgot-password">
+        <div className="divider-pro"><span>or</span></div>
+        <div className="forgot-password-pro">
           <Link to="/forgot-password">
             <i className="fas fa-key"></i> Forgot Password?
           </Link>

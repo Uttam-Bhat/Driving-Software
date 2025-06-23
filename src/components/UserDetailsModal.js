@@ -110,14 +110,18 @@ function UserDetailsModal({ isOpen, onClose, userData }) {
       const updatedDocuments = documents.map(doc => 
         doc.documentType === editingDocument.documentType && 
         doc.documentSubType === editingDocument.documentSubType 
-          ? { ...formData }
+          ? { ...formData } 
           : doc
       );
-      
       setDocuments(updatedDocuments);
       setIsEditing(false);
       setEditingDocument(null);
-      
+      // Update formData with customerName and contactNumber from userData if available
+      setFormData(prev => ({
+        ...prev,
+        customerName: userData?.customerName || prev.customerName,
+        contactNumber: userData?.contactNumber || prev.contactNumber
+      }));
       // Show success message
       alert('Document updated successfully!');
     } catch (error) {

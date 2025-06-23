@@ -107,8 +107,9 @@
   color: #007cf0;
 }
 
+/* Remove color change on hover for search icon */
 .search-input-group:hover i {
-  color: #007cf0;
+  color: #6c757d;
 }
 
 .search-button, .new-user-button {

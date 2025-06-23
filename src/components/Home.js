@@ -59,7 +59,6 @@ function Home() {
                 required
               />
               <button type="submit" className="search-button">
-                <i className="fas fa-search"></i>
                 Search
               </button>
             </div>
