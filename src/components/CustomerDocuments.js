@@ -1,7 +1,7 @@
 import React from 'react';
 import './CustomerDocuments.css';
 
-function CustomerDocuments({ documents, onUpdateDocument, onViewDocument }) {
+function CustomerDocuments({ documents, onUpdateDocument, onViewDocument, onDeleteDocument }) {
   const getDocumentIcon = (type) => {
     switch (type) {
       case 'License':
@@ -57,9 +57,13 @@ function CustomerDocuments({ documents, onUpdateDocument, onViewDocument }) {
   };
 
   const handleViewDocument = (doc) => {
+    console.log('CustomerDocuments handleViewDocument called with:', doc);
+    console.log('onViewDocument prop:', onViewDocument);
     if (onViewDocument) {
+      console.log('Calling onViewDocument function');
       onViewDocument(doc);
     } else {
+      console.log('onViewDocument prop is not available, showing alert');
       // Default behavior - show document details in a simple alert
       const details = `
 Document Details:
@@ -73,6 +77,14 @@ Payment Date: ${formatDate(doc.amountPaidDate)}
 Notes: ${doc.notes || 'No notes available'}
       `;
       alert(details);
+    }
+  };
+
+  const handleDeleteDocument = (doc) => {
+    if (window.confirm(`Are you sure you want to delete this ${doc.documentType} document? This action cannot be undone.`)) {
+      if (onDeleteDocument) {
+        onDeleteDocument(doc);
+      }
     }
   };
 
@@ -166,9 +178,19 @@ Notes: ${doc.notes || 'No notes available'}
                 <i className="fas fa-edit"></i>
                 Update Details
               </button>
-              <button className="action-button secondary" onClick={() => handleViewDocument(doc)}>
+              <button 
+                className="action-button secondary" 
+                onClick={() => handleViewDocument(doc)}
+              >
                 <i className="fas fa-eye"></i>
                 View Details
+              </button>
+              <button 
+                className="action-button danger"
+                onClick={() => handleDeleteDocument(doc)}
+              >
+                <i className="fas fa-trash"></i>
+                Delete
               </button>
             </div>
           </div>

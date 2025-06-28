@@ -37,13 +37,13 @@ function NewUserModal({ isOpen, onClose }) {
     // Update document subtypes based on document type
     switch (formData.documentType) {
       case 'License':
-        setDocumentSubTypes(['New', 'Renewal']);
+        setDocumentSubTypes(['New', 'Renewal', 'COA', 'Duplicate']);
         break;
       case 'Insurance':
         setDocumentSubTypes(['New', 'Renewal']);
         break;
       case 'RC':
-        setDocumentSubTypes(['New', 'Transfer', 'Duplicate']);
+        setDocumentSubTypes(['New', 'Renewal', 'COA', 'Duplicate']);
         break;
       default:
         setDocumentSubTypes([]);
